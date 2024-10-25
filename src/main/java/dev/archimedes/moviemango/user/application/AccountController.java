@@ -4,6 +4,7 @@ import dev.archimedes.moviemango.user.application.dtos.request.AccountCreateRequ
 import dev.archimedes.moviemango.user.application.dtos.request.AccountDeleteRequest;
 import dev.archimedes.moviemango.user.application.dtos.response.AccountGetResponse;
 import dev.archimedes.moviemango.user.domain.Account;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,21 +24,24 @@ public class AccountController {
 
 
   @PostMapping("/v1/account")
+  @Operation(summary = "Create an account for the user.")
   public ResponseEntity<Object> create(@RequestBody AccountCreateRequest request) {
     Account executed = accountCreateUseCase.execute(request);
     return new ResponseEntity<>(Map.of("id", executed.getId()), HttpStatus.CREATED);
   }
 
-  @ResponseStatus(HttpStatus.OK)
   @GetMapping("/v1/account")
+  @ResponseStatus(HttpStatus.OK)
+  @Operation(summary = "Get the account of user by the account id.")
   public AccountGetResponse get(@RequestParam Long id) {
     Account executed = accountFetchUseCase.execute(id);
     return new AccountGetResponse(executed);
   }
 
 
-  @ResponseStatus(HttpStatus.ACCEPTED)
   @DeleteMapping("/v1/account")
+  @ResponseStatus(HttpStatus.ACCEPTED)
+  @Operation(summary = "Delete the account of the user by account id")
   public void delete(@RequestParam Long id) {
     accountDeleteUseCase.execute(new AccountDeleteRequest(id));
   }
