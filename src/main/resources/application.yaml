@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: movie-mango
+
+  datasource:
+    username: myuser
+    password: secret
+    url: jdbc:postgresql://localhost:5433/mydatabase
