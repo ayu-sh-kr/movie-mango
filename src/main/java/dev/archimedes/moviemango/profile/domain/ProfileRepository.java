@@ -104,6 +104,11 @@ public class ProfileRepository implements BaseRepository<Profile, Long> {
     Map<String, Object> keys = keyHolder.getKeys();
     Assert.state(keys != null, "Keys must be returned");
 
+    Assert.notNull(keys.get("created_at"), "Created time should be returned");
+    profile.setCreatedAt(
+        ((Timestamp) keys.get("created_at")).toLocalDateTime()
+    );
+
     Assert.notNull(keys.get("updated_at"), "Updated time should be returned");
     profile.setUpdatedAt(
         ((Timestamp) keys.get("updated_at")).toLocalDateTime()
