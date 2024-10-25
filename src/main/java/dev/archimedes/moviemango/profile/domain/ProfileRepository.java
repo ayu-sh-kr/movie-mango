@@ -37,7 +37,7 @@ public class ProfileRepository implements BaseRepository<Profile, Long> {
     return findById(id).orElse(null);
   }
 
-  public Profile create(Profile profile) {
+  protected Profile create(Profile profile) {
     KeyHolder keyHolder = new GeneratedKeyHolder();
 
     int rowsAffected = jdbcClient
@@ -85,7 +85,7 @@ public class ProfileRepository implements BaseRepository<Profile, Long> {
     }
   }
 
-  public Profile update(Profile profile) {
+  protected Profile update(Profile profile) {
     KeyHolder keyHolder = new GeneratedKeyHolder();
     jdbcClient
         .sql("""
@@ -126,5 +126,17 @@ public class ProfileRepository implements BaseRepository<Profile, Long> {
         .sql("delete from profile where refer = :refer")
         .param("refer", value)
         .update();
+  }
+
+  public Optional<Profile> findByAccountId(Long value) {
+    return jdbcClient
+        .sql("select * from profile where refer = :refer")
+        .param("refer", value)
+        .query(Profile.class)
+        .optional();
+  }
+
+  public boolean existsByAccountId(Long value) {
+    return findByAccountId(value).isPresent();
   }
 }
