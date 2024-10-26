@@ -26,11 +26,11 @@ public class Movie {
   public LocalDateTime updatedAt;
 
   public Movie(
-      MovieTitle title, String description, LocalDate release, Double duration,
+      String title, String description, LocalDate release, Double duration,
       String genre, String director, Double rating, String language, String origin,
       LocalDateTime createdAt, LocalDateTime updatedAt
   ) {
-    this.title = title;
+    this.title = new MovieTitle(title);
     this.description = new MovieDescription(description);
     this.release = release;
     this.duration = duration;
