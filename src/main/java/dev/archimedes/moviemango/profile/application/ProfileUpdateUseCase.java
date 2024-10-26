@@ -19,8 +19,9 @@ public class ProfileUpdateUseCase {
     }
 
     Profile profile = new Profile(
-      request.name(), request.age(), request.dob(), request.street(), request.state(), request.zip(),
-      request.country(), accountId, null, null
+        request.name(), request.age(), request.dob(), request.gender(),
+        request.street(), request.state(), request.zip(),
+        request.country(), accountId, null, null
     );
 
     profile.setId(profileId);
