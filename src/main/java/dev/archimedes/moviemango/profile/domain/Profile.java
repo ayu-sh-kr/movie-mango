@@ -21,6 +21,7 @@ public class Profile {
   private String name;
   private Integer age;
   private LocalDate dob;
+  private Gender gender;
   private Street street;
   private State state;
   private Zip zip;
@@ -32,7 +33,7 @@ public class Profile {
 
   @SuppressWarnings("unused")
   public Profile(
-      String name, Integer age, LocalDate dob, String street, String state, String zip,
+      String name, Integer age, LocalDate dob, String gender, String street, String state, String zip,
       String country, Long refer, LocalDateTime createdAt, LocalDateTime updatedAt
   ) {
 
@@ -43,6 +44,7 @@ public class Profile {
     this.name = name;
     this.age = age;
     this.dob = dob;
+    this.gender = new Gender(gender);
     this.street = new Street(street);
     this.state = new State(state);
     this.zip = new Zip(zip);
