@@ -1,6 +1,7 @@
 package dev.archimedes.moviemango.movie.domain;
 
 import dev.archimedes.moviemango.BaseRepository;
+import dev.archimedes.moviemango.movie.application.dto.FilterUnit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -127,5 +129,87 @@ public class MovieRepository implements BaseRepository<Movie, Long> {
         .update();
 
     Assert.state(rowsAffected == 1, "Unexpected rows deleted, when deleting movie. Rows Affected: " + rowsAffected);
+  }
+
+  public List<Movie> findAllByLimit(Integer limit) {
+    return jdbcClient
+        .sql("select * from movie limit :limit")
+        .param("limit", limit)
+        .query(Movie.class)
+        .list();
+  }
+
+  public List<Movie> findAllWhereTitleEqualAndLimit(String title, Integer limit) {
+    return jdbcClient
+        .sql("select * from movie where title like :title limit :limit")
+        .param("title", "%" + title + "%")
+        .param("limit", limit)
+        .query(Movie.class)
+        .list();
+  }
+
+  public List<Movie> findAllByFilter(FilterUnit unit) {
+    switch (unit.type()) {
+
+      case RATING -> {
+        return jdbcClient
+            .sql("select * from movie where rating = :rating")
+            .param("rating", unit.rating())
+            .query(Movie.class)
+            .list();
+      }
+
+      case DIRECTOR -> {
+        return jdbcClient
+            .sql("select * from movie where lower(director) like :director")
+            .param("director", "%" + unit.value().toLowerCase() + "%")
+            .query(Movie.class)
+            .list();
+      }
+
+      case GENRE -> {
+        return jdbcClient
+            .sql("select * from movie where genre = :genre::movie_genre")
+            .param("genre", unit.value())
+            .query(Movie.class)
+            .list();
+      }
+
+      case ORIGIN -> {
+        return jdbcClient
+            .sql("select * from movie where lower(origin) like :origin")
+            .param("origin", "%" + unit.value().toLowerCase() + "%")
+            .query(Movie.class)
+            .list();
+      }
+
+      case DURATION -> {
+        return jdbcClient
+            .sql("select * from movie where duration >= :duration")
+            .param("duration", unit.duration())
+            .query(Movie.class)
+            .list();
+      }
+
+      case LANGUAGE -> {
+        return jdbcClient
+            .sql("select * from movie where lower(language) like :language")
+            .param("language", "%" + unit.value().toLowerCase() + "%")
+            .query(Movie.class)
+            .list();
+      }
+
+      case RELEASE -> {
+        return jdbcClient
+            .sql("select * from movie where release = :release")
+            .param("release", unit.release())
+            .query(Movie.class)
+            .list();
+      }
+
+      default -> {
+        return null;
+      }
+    }
   }
 }
