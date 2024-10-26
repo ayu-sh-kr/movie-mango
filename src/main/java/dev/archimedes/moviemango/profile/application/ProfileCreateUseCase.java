@@ -21,7 +21,7 @@ public class ProfileCreateUseCase {
 
     return profileRepository.save(
         new Profile(
-          request.name(), request.age(), request.dob(), request.street(),
+          request.name(), request.age(), request.dob(), request.gender(), request.street(),
           request.state(), request.zip(), request.country(), id, null, null
         )
     );
