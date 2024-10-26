@@ -42,12 +42,13 @@ public class ProfileRepository implements BaseRepository<Profile, Long> {
 
     int rowsAffected = jdbcClient
         .sql("""
-            insert into profile(name, age, dob, street, state, zip, country, refer)
-            values (:name, :age, :dob, :street, :state, :zip, :country, :refer)
+            insert into profile(name, age, dob, gender, street, state, zip, country, refer)
+            values (:name, :age, :dob, :gender::gender, :street, :state, :zip, :country, :refer)
             """)
         .param("name", profile.getName())
         .param("age", profile.getAge())
         .param("dob", profile.getDob())
+        .param("gender", profile.getGender().getValue())
         .param("street", profile.getStreet().value())
         .param("state", profile.getState().value())
         .param("zip", profile.getZip().value())
@@ -90,12 +91,12 @@ public class ProfileRepository implements BaseRepository<Profile, Long> {
     jdbcClient
         .sql("""
             update profile
-            set name = :name, age = :age, dob = :dob, street = :street,
+            set name = :name, age = :age, dob = :dob, gender = :gender::gender, street = :street,
                 state = :state, zip = :zip, country = :country, updated_at = now()
             where id = :id and refer = :refer
             """)
         .params(Map.of(
-            "name", profile.getName(), "age", profile.getAge(), "dob", profile.getDob(),
+            "name", profile.getName(), "age", profile.getAge(), "dob", profile.getDob(), "gender", profile.getGender().getValue(),
             "street", profile.getStreet().value(), "state", profile.getState().value(), "zip", profile.getZip().value(),
             "country", profile.getCountry().value(), "id", profile.getId(), "refer", profile.getRefer()
         ))
