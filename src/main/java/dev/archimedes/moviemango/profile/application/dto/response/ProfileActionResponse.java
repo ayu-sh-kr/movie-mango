@@ -15,6 +15,7 @@ public record ProfileActionResponse(
         pattern = "yyyy-MM-dd"
     )
     LocalDate dob,
+    String gender,
     String street,
     String state,
     String zip,
@@ -34,7 +35,7 @@ public record ProfileActionResponse(
 
   public ProfileActionResponse(Profile profile) {
     this(
-        profile.getId(), profile.getName(), profile.getAge(), profile.getDob(),
+        profile.getId(), profile.getName(), profile.getAge(), profile.getDob(), profile.getGender().getValue(),
         profile.getStreet().value(), profile.getState().value(), profile.getZip().value(),
         profile.getCountry().value(), profile.getCreatedAt(), profile.getUpdatedAt()
     );
