@@ -170,7 +170,7 @@ public class MovieRepository implements BaseRepository<Movie, Long> {
       case GENRE -> {
         return jdbcClient
             .sql("select * from movie where genre = :genre::movie_genre")
-            .param("genre", unit.value())
+            .param("genre", AvailableGenre.fromString(unit.value()).value)
             .query(Movie.class)
             .list();
       }
