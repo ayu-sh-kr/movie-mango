@@ -12,6 +12,7 @@ public record ProfileCreateRequest(
         pattern = "yyyy-MM-dd"
     )
     LocalDate dob,
+    String gender,
     String street,
     String state,
     String zip,
