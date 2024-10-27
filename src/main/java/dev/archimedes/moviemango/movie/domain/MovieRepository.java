@@ -2,6 +2,12 @@ package dev.archimedes.moviemango.movie.domain;
 
 import dev.archimedes.moviemango.BaseRepository;
 import dev.archimedes.moviemango.movie.application.dto.FilterUnit;
+import dev.archimedes.moviemango.movie.application.search.FilterTypeDuration;
+import dev.archimedes.moviemango.movie.application.search.FilterTypeRating;
+import dev.archimedes.moviemango.movie.application.search.FilterTypeRelease;
+import dev.archimedes.moviemango.movie.application.search.meta.FilterByDurationMeta;
+import dev.archimedes.moviemango.movie.application.search.meta.FilterByRatingMeta;
+import dev.archimedes.moviemango.movie.application.search.meta.FilterByReleaseMeta;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -148,15 +154,118 @@ public class MovieRepository implements BaseRepository<Movie, Long> {
         .list();
   }
 
+  public List<Movie> filterByRelease(FilterByReleaseMeta meta) {
+    switch (FilterTypeRelease.fromString(meta.type())) {
+      case ON_RELEASE -> {
+        return jdbcClient
+            .sql("select * from movie where release = :date")
+            .param("date", meta.date())
+            .query(Movie.class)
+            .list();
+      }
+
+      case AFTER_RELEASE -> {
+        return jdbcClient
+            .sql("select * from movie where release > :date")
+            .param("date", meta.date())
+            .query(Movie.class)
+            .list();
+      }
+
+      case BEFORE_RELEASE -> {
+        return jdbcClient
+            .sql("select * from movie where release < :date")
+            .param("date", meta.date())
+            .query(Movie.class)
+            .list();
+
+      }
+
+      case ON_AND_AFTER_RELEASE -> {
+        return jdbcClient
+            .sql("select * from movie where release >= :date")
+            .param("date", meta.date())
+            .query(Movie.class)
+            .list();
+      }
+
+      case ON_AND_BEFORE_RELEASE -> {
+        return jdbcClient
+            .sql("select * from movie where release <= :date")
+            .param("date", meta.date())
+            .query(Movie.class)
+            .list();
+      }
+    }
+    return List.of();
+  }
+
+
+  public List<Movie> filterByDuration(FilterByDurationMeta meta) {
+    switch (FilterTypeDuration.fromString(meta.type())) {
+      case DURATION_EQUAL_TO -> {
+        return jdbcClient
+            .sql("select * from movie where duration = :duration")
+            .param("duration", meta.duration())
+            .query(Movie.class)
+            .list();
+      }
+
+      case DURATION_LESS_THAN -> {
+        return jdbcClient
+            .sql("select * from movie where duration <= :duration")
+            .param("duration", meta.duration())
+            .query(Movie.class)
+            .list();
+      }
+
+      case DURATION_GREATER_THAN -> {
+        return jdbcClient
+            .sql("select * from movie where duration >= :duration")
+            .param("duration", meta.duration())
+            .query(Movie.class)
+            .list();
+      }
+    }
+
+    return List.of();
+  }
+
+  public List<Movie> filterByRating(FilterByRatingMeta meta) {
+    switch (FilterTypeRating.fromString(meta.type())) {
+      case RATING_EQUAL_TO -> {
+        return jdbcClient
+            .sql("select * from movie where rating = :rating")
+            .param("rating", meta.rating())
+            .query(Movie.class)
+            .list();
+      }
+
+      case RATING_LESS_THAN -> {
+        return jdbcClient
+            .sql("select * from movie where rating <= :rating")
+            .param("rating", meta.rating())
+            .query(Movie.class)
+            .list();
+      }
+
+      case RATING_GREATER_THAN -> {
+        return jdbcClient
+            .sql("select * from movie where rating >= :rating")
+            .param("rating", meta.rating())
+            .query(Movie.class)
+            .list();
+      }
+    }
+
+    return List.of();
+  }
+
   public List<Movie> findAllByFilter(FilterUnit unit) {
     switch (unit.type()) {
 
       case RATING -> {
-        return jdbcClient
-            .sql("select * from movie where rating = :rating")
-            .param("rating", unit.rating())
-            .query(Movie.class)
-            .list();
+        return filterByRating(unit.ratingMeta());
       }
 
       case DIRECTOR -> {
@@ -184,11 +293,7 @@ public class MovieRepository implements BaseRepository<Movie, Long> {
       }
 
       case DURATION -> {
-        return jdbcClient
-            .sql("select * from movie where duration >= :duration")
-            .param("duration", unit.duration())
-            .query(Movie.class)
-            .list();
+        return filterByDuration(unit.durationMeta());
       }
 
       case LANGUAGE -> {
@@ -200,11 +305,7 @@ public class MovieRepository implements BaseRepository<Movie, Long> {
       }
 
       case RELEASE -> {
-        return jdbcClient
-            .sql("select * from movie where release = :release")
-            .param("release", unit.release())
-            .query(Movie.class)
-            .list();
+        return filterByRelease(unit.releaseMeta());
       }
 
       default -> {
