@@ -6,9 +6,7 @@ import dev.archimedes.moviemango.movie.domain.Movie;
 import dev.archimedes.moviemango.movie.domain.MovieRepository;
 import lombok.RequiredArgsConstructor;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @UseCase
 @RequiredArgsConstructor
@@ -33,7 +31,16 @@ public class MovieSearchUseCase {
         request.filters()
             .forEach(unit -> movies.addAll(movieRepository.findAllByFilter(unit)));
 
-        return movies.stream()
+        List<Movie> movieList = new ArrayList<>(
+            movies
+                .stream()
+                .toList()
+        );
+
+        Collections.shuffle(movieList);
+
+        return movieList.stream()
+            .limit(request.limit())
             .toList();
       }
       case CATEGORICAL -> {
