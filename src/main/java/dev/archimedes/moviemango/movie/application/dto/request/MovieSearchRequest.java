@@ -1,6 +1,6 @@
 package dev.archimedes.moviemango.movie.application.dto.request;
 
-import dev.archimedes.moviemango.movie.application.FetchType;
+import dev.archimedes.moviemango.movie.application.search.FetchType;
 import dev.archimedes.moviemango.movie.application.dto.FilterUnit;
 import io.micrometer.common.util.StringUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
