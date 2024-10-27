@@ -1,11 +1,12 @@
 package dev.archimedes.moviemango.movie.application.dto;
 
-import dev.archimedes.moviemango.movie.application.FilterType;
+import dev.archimedes.moviemango.movie.application.search.FilterType;
+import dev.archimedes.moviemango.movie.application.search.meta.FilterByDurationMeta;
+import dev.archimedes.moviemango.movie.application.search.meta.FilterByRatingMeta;
+import dev.archimedes.moviemango.movie.application.search.meta.FilterByReleaseMeta;
 import io.micrometer.common.util.StringUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.util.Assert;
-
-import java.time.LocalDate;
 
 @Schema(description = "Sole unit to apply for filtering / categorising")
 public record FilterUnit(
@@ -14,13 +15,13 @@ public record FilterUnit(
     String value,
 
     @Schema(description = "Required if filter type is RELEASE.")
-    LocalDate release,
+    FilterByReleaseMeta releaseMeta,
 
     @Schema(description = "Required if filter type is RATING.")
-    Double rating,
+    FilterByRatingMeta ratingMeta,
 
     @Schema(description = "Required if filter type is DURATION")
-    Double duration,
+    FilterByDurationMeta durationMeta,
 
     @Schema(description = "Required for filtering out result")
     FilterType type
@@ -41,12 +42,15 @@ public record FilterUnit(
         );
 
       case RATING -> Assert.notNull(
-          rating, "Rating can't be null for categorising / filtering using rating"
+          ratingMeta, "Rating meta can't be null for categorising / filtering using rating"
+      );
+
+      case RELEASE -> Assert.notNull(
+          releaseMeta, "Release meta can't be null for categorising / filtering using rating"
       );
 
       case DURATION -> Assert.notNull(
-          duration,
-          "Duration can't be null for categorising / filtering using duration"
+          durationMeta, "Duration meta can't be null for categorising / filtering using duration"
       );
     }
 
