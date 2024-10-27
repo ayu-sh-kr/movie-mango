@@ -147,8 +147,8 @@ public class MovieRepository implements BaseRepository<Movie, Long> {
 
   public List<Movie> findAllWhereTitleEqualAndLimit(String title, Integer limit) {
     return jdbcClient
-        .sql("select * from movie where title like :title limit :limit")
-        .param("title", "%" + title + "%")
+        .sql("select * from movie where lower(title) like :title limit :limit")
+        .param("title", "%" + title.toLowerCase() + "%")
         .param("limit", limit)
         .query(Movie.class)
         .list();
