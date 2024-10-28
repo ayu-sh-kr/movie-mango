@@ -4,6 +4,16 @@ import dev.archimedes.moviemango.UseCase;
 import dev.archimedes.moviemango.user.domain.Account;
 import dev.archimedes.moviemango.user.domain.AccountRepository;
 
+/// **AccountFetchUseCase** class is a use case service class responsible fetching the account details.
+///
+/// The main responsibility of this class is to validate the account fetch request if the account exist or not.
+/// If exist then fetch the detail and return it.
+///
+/// Methods:
+///
+///  - [#execute(Long)]
+///
+///  @see dev.archimedes.moviemango.user.application.AccountFetchUseCase#execute(Long)
 @UseCase
 public class AccountFetchUseCase {
 
