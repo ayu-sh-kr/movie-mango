@@ -6,8 +6,8 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Setter
 @Getter
+@Setter
 @NoArgsConstructor
 public class MovieCast {
 
@@ -26,5 +26,17 @@ public class MovieCast {
 
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
+  }
+
+  public Long getCastId() {
+    return castId.value();
+  }
+
+  public Long getMovieId() {
+    return movieId.value();
+  }
+
+  public String getRole() {
+    return role.role().value;
   }
 }
