@@ -1,4 +1,9 @@
-CREATE TYPE IF NOT EXISTS gender AS ENUM ('male', 'female', 'other');
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'gender') THEN
+    CREATE TYPE gender AS ENUM ('male', 'female', 'other');
+END IF;
+END $$;
 
 CREATE TABLE IF NOT EXISTS account
 (
@@ -27,12 +32,17 @@ CREATE TABLE IF NOT EXISTS profile
     CONSTRAINT fk_account FOREIGN KEY (refer) REFERENCES account (id)
 );
 
-CREATE TYPE IF NOT EXISTS movie_genre AS ENUM(
-    'action', 'adventure', 'comedy', 'drama', 'fantasy',
-    'horror', 'mystery', 'romance', 'science fiction', 'thriller',
-    'western', 'animation', 'documentary', 'musical', 'crime', 'family',
-    'historical', 'war', 'sport', 'biography'
-);
+DO $$
+BEGIN
+    IF NOT EXISTS (select 1 from pg_type WHERE typname = 'movie_genre') THEN
+    CREATE TYPE movie_genre AS ENUM(
+        'action', 'adventure', 'comedy', 'drama', 'fantasy',
+        'horror', 'mystery', 'romance', 'science fiction', 'thriller',
+        'western', 'animation', 'documentary', 'musical', 'crime', 'family',
+        'historical', 'war', 'sport', 'biography'
+    );
+    END IF;
+END $$;
 
 CREATE TABLE IF NOT EXISTS movie
 (
@@ -62,10 +72,16 @@ CREATE TABLE IF NOT EXISTS cast_profile
     updated_at TIMESTAMP
 );
 
-CREATE TYPE IF NOT EXISTS movie_role AS ENUM(
-    'lead actor', 'supporting actor', 'director', 'producer',
-    'cinematographer', 'editor', 'composer'
-);
+DO $$
+BEGIN
+    IF NOT EXISTS (select 1 from pg_type WHERE typname = 'movie_role') THEN
+    CREATE TYPE movie_role AS ENUM(
+        'lead actor', 'supporting actor', 'director', 'producer',
+        'cinematographer', 'editor', 'composer'
+    );
+    END IF;
+END $$;
+
 
 CREATE TABLE IF NOT EXISTS movie_cast
 (
