@@ -1,9 +1,6 @@
 package dev.archimedes.moviemango.movie.application;
 
-import dev.archimedes.moviemango.movie.application.dto.request.MovieCreateRequest;
-import dev.archimedes.moviemango.movie.application.dto.request.MovieDeleteRequest;
-import dev.archimedes.moviemango.movie.application.dto.request.MovieSearchRequest;
-import dev.archimedes.moviemango.movie.application.dto.request.MovieUpdateRequest;
+import dev.archimedes.moviemango.movie.application.dto.request.*;
 import dev.archimedes.moviemango.movie.application.dto.response.MovieActionResponse;
 import dev.archimedes.moviemango.movie.domain.Movie;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,6 +19,7 @@ public class MovieController {
   private final MovieUpdateUseCase movieUpdateUseCase;
   private final MovieDeleteUseCase movieDeleteUseCase;
   private final MovieSearchUseCase movieSearchUseCase;
+  private final MovieCheckUseCase movieCheckUseCase;
 
   @PostMapping("/v1/movie")
   @ResponseStatus(HttpStatus.CREATED)
@@ -53,6 +51,15 @@ public class MovieController {
     return movieSearchUseCase.execute(request)
         .stream().map(MovieActionResponse::new)
         .toList();
+  }
+
+  @GetMapping("/v1/movie/{id}/exists")
+  @ResponseStatus(HttpStatus.OK)
+  @Operation(summary = "Use this API to check is a cast exist or not.")
+  boolean check(@PathVariable("id") Long id) {
+    return movieCheckUseCase.execute(
+        new MovieCheckRequest(id)
+    );
   }
 
 }
