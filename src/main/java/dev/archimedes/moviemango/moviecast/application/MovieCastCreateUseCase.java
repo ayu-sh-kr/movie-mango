@@ -52,7 +52,7 @@ public class MovieCastCreateUseCase {
 
   private Boolean checkExistence(String domain, Long id) {
     ResponseEntity<Boolean> entity = restClient.get()
-        .uri("/v1/{domain}/{id}/exist-by-id", domain, id)
+        .uri("/v1/{domain}/{id}/exists", domain, id)
         .retrieve()
         .toEntity(Boolean.class);
     return entity.getBody();
