@@ -1,5 +1,6 @@
 package dev.archimedes.moviemango.cast.application;
 
+import dev.archimedes.moviemango.cast.application.dto.request.CastCheckRequest;
 import dev.archimedes.moviemango.cast.application.dto.request.CastCreateRequest;
 import dev.archimedes.moviemango.cast.application.dto.request.CastDeleteRequest;
 import dev.archimedes.moviemango.cast.application.dto.request.CastUpdateRequest;
@@ -17,6 +18,7 @@ public class CastController {
   private final CastCreateUseCase castCreateUseCase;
   private final CastUpdateUseCase castUpdateUseCase;
   private final CastDeleteUseCase castDeleteUseCase;
+  private final CastCheckUseCase castCheckUseCase;
 
   @PostMapping("/v1/cast")
   @ResponseStatus(HttpStatus.CREATED)
@@ -39,6 +41,15 @@ public class CastController {
   @Operation(summary = "Use this API to delete a cast profile")
   void delete(CastDeleteRequest request) {
     castDeleteUseCase.execute(request);
+  }
+
+  @GetMapping("/v1/cast/{id}/exists")
+  @ResponseStatus(HttpStatus.OK)
+  @Operation(summary = "Use this API to check is a cast exist or not.")
+  boolean check(@PathVariable("id") Long id) {
+    return castCheckUseCase.execute(
+        new CastCheckRequest(id)
+    );
   }
 
 }
