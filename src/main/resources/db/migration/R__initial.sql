@@ -93,4 +93,6 @@ CREATE TABLE IF NOT EXISTS movie_cast
     updated_at TIMESTAMP,
     CONSTRAINT fk_movie FOREIGN KEY (movie_id) REFERENCES movie(id),
     CONSTRAINT fk_cast FOREIGN KEY (cast_id) REFERENCES cast_profile(id)
-)
+);
+
+ALTER TABLE movie_cast ADD COLUMN IF NOT EXISTS character_name VARCHAR(255);
