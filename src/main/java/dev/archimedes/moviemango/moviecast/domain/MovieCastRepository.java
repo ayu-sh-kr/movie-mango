@@ -1,6 +1,7 @@
 package dev.archimedes.moviemango.moviecast.domain;
 
 import dev.archimedes.moviemango.BaseRepository;
+import dev.archimedes.moviemango.moviecast.application.dto.response.MovieCastJointResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -127,5 +128,33 @@ public class MovieCastRepository implements BaseRepository<MovieCast, Long> {
 
   public boolean existsByIdAndCastIdAndMovieId(Long id, Long castId, Long movieId) {
     return findByIdAndCastIdAndMovieId(id, castId, movieId).isPresent();
+  }
+
+  public List<MovieCastJointResponse> findCastsByMovieName(String name) {
+    return jdbcClient
+        .sql("""
+            select cp.name, mc.character_name, mc.role, m.title
+            from movie_cast mc
+            join movie m on m.id = mc.movie_id
+            join cast_profile cp on cp.id = mc.cast_id
+            where m.title like :title
+            """)
+        .param("title", "%" + name + "%")
+        .query(MovieCastJointResponse.class)
+        .list();
+  }
+
+  public List<MovieCastJointResponse> findCastsByMovieId(Long movieId) {
+    return jdbcClient
+        .sql("""
+            select cp.name, mc.character_name, mc.role, m.title
+            from movie_cast mc
+            join cast_profile cp on cp.id = mc.cast_id
+            join movie m on m.id = mc.movie_id
+            where mc.movie_id = ?
+            """)
+        .param(movieId)
+        .query(MovieCastJointResponse.class)
+        .list();
   }
 }
