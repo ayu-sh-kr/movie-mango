@@ -42,7 +42,7 @@ public class MovieCastController {
   @GetMapping("/v1/movie-cast")
   @ResponseStatus(HttpStatus.OK)
   @Operation(summary = "Use this API to fetch the casts in the movie by name or ID")
-  List<MovieCastJointResponse> get(@RequestBody MovieCastFetchRequest request) {
+  List<MovieCastJointResponse> fetch(@RequestBody MovieCastFetchRequest request) {
     return movieCastFetchUseCase.execute(request);
   }
 
